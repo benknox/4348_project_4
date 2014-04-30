@@ -67,6 +67,30 @@ public class Server
 			Handler handler = new ReverseHandler();
 			return handler;
 		}
+		else if ("read".equalsIgnoreCase(commandString)) {
+			Handler handler = new ReadHandler();
+			return handler;
+		}
+		else if ("read object".equalsIgnoreCase(commandString)) {
+			Handler handler = new ReadObjectHandler();
+			return handler;
+		}
+		else if ("write".equalsIgnoreCase(commandString)) {
+			Handler handler = new WriteHandler();
+			return handler;
+		}
+		else if ("write object".equalsIgnoreCase(commandString)) {
+			Handler handler = new WriteObjectHandler();
+			return handler;
+		}
+		else if ("delete".equalsIgnoreCase(commandString)) {
+			Handler handler = new DeleteHandler();
+			return handler;
+		}
+		else if ("directory".equalsIgnoreCase(commandString)) {
+			Handler handler = new DirectoryHandler();
+			return handler;
+		}
 		else {
 			throw new ServerException("Unknown Request: " + commandString);
 		}

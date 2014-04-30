@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,16 @@ public class FileUtil
 		}
 		ostream.close();
 	}
+	
+	public static void writeObject(String name, Object data) throws IOException
+	{
+		File file = new File(directory, name);
+		file.createNewFile();
+		OutputStream ostream = new FileOutputStream(file);
+		ObjectOutputStream os = new ObjectOutputStream(ostream);
+		os.writeObject(data);
+		os.close();
+	}
 
 	public static byte[] readData(String name) throws ServerException, IOException
     {
@@ -46,6 +58,25 @@ public class FileUtil
 	    }
 	    istream.close();
 	    return baos.toByteArray();
+    }
+	
+	public static Object readObject(String name) throws ServerException, IOException
+    {
+		File file = new File(directory, name);
+	    if(!file.exists()) {
+	    	throw new ServerException("No File Found " + name);
+	    }
+	    
+	    Object o;
+	    InputStream istream = new FileInputStream(file);
+	    ObjectInputStream ois = new ObjectInputStream(istream);
+	    try {
+			o = ois.readObject();
+		} catch (ClassNotFoundException e) {
+			throw new ServerException(e.getMessage());
+		}
+	    ois.close();
+	    return o;
     }
 
 	public static boolean deleteData(String name) throws ServerException

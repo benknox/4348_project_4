@@ -2,6 +2,7 @@ package utd.persistentDataStore.simpleSocket.client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
@@ -41,14 +42,64 @@ public class ClientDriver
 			client.directory();
 			
 			/* Extra Credit */
-			// Test Object Write
+			// Test Write Object
+			logger.debug("Testing writeObject...");
+			SimpleObject obj = new SimpleObject("Test String", 12, 33.33);
+			client.writeObject("Simple Object", obj);
 			
-			// Test Object Read
+			// Test Read Object
+			logger.debug("Testing readObject...");
+			client.readObject("Simple Object");
+			
 			 
 		}
 		catch (UnknownHostException ex)
 		{
 			throw new ClientException(ex.getMessage(), ex);
 		}
+	}
+}
+
+class SimpleObject implements Serializable
+{
+	String str;
+	int integer;
+	double dub;
+	
+	public SimpleObject(String str, int integer, double dub)
+	{
+		this.str = str;
+		this.integer = integer;
+		this.dub = dub;
+	}
+	
+	public String getStr()
+	{
+		return str;
+	}
+	
+	public int getInteger()
+	{
+		return integer;
+	}
+	
+	public double getDub()
+	{
+		return dub;
+	}
+	
+	public void setStr(String str)
+	{
+		this.str = str;
+	}
+	
+	public void setInteger(int integer)
+	{
+		this.integer = integer;
+	}
+	
+	public void setDub(double dub)
+	{
+		this.dub = dub;
 	}
 }

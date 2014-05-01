@@ -2,6 +2,7 @@ package utd.persistentDataStore.simpleSocket.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -9,6 +10,8 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 import org.apache.log4j.Logger;
 
@@ -193,7 +196,7 @@ public class Client
 	}
 	
 	/**
-	 * 
+	 * Get a list of files from the server
 	 */
 	public List<String> directory() throws ClientException
 	{
@@ -233,5 +236,80 @@ public class Client
 			throw new ClientException(ex.getMessage(), ex);
 		}
 	}
-
+	
+	/**
+	 * Give the server an object to store persistently
+	 */
+	public void writeObject(String name, Object obj) throws ClientException
+	{
+		try {
+			logger.debug("Opening Socket");
+			Socket socket = new Socket();
+			SocketAddress saddr = new InetSocketAddress(address, port);
+			socket.connect(saddr);
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
+			
+			logger.debug("Passing the request message");
+			// Pass the operation command
+			StreamUtil.writeLine("writeObject\n", outputStream);
+			// Pass the object name
+			StreamUtil.writeLine(name, outputStream);
+			// Pass the object
+			ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+			oos.writeObject(obj);
+			oos.flush();
+			logger.debug("Object passed: " + obj.toString());
+			
+			logger.debug("Reading the response message");
+			String response = StreamUtil.readLine(inputStream);
+			if ( "ok".equalsIgnoreCase(response) )
+			{	
+				logger.debug("Response Code: " + response);
+			}
+			else
+				throw new ClientException(response);
+		}
+		catch (IOException ex) {
+			throw new ClientException(ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 * Give the server an object to store persistently
+	 */
+	public Object readObject(String name) throws ClientException
+	{
+		try {
+			logger.debug("Opening Socket");
+			Socket socket = new Socket();
+			SocketAddress saddr = new InetSocketAddress(address, port);
+			socket.connect(saddr);
+			InputStream inputStream = socket.getInputStream();
+			OutputStream outputStream = socket.getOutputStream();
+			
+			logger.debug("Passing the request message");
+			// Pass the operation command
+			StreamUtil.writeLine("readObject\n", outputStream);
+			// Pass the name of the object
+			StreamUtil.writeLine(name, outputStream);
+			
+			logger.debug("Reading the response message");
+			String response = StreamUtil.readLine(inputStream);
+			if ( "ok".equalsIgnoreCase(response) )
+			{	
+				logger.debug("Response Code: " + response);
+				ObjectInputStream ois = new ObjectInputStream(inputStream);
+				Object result = ois.readObject();
+				logger.debug("Response: " + result.toString());
+				
+				return result;				
+			}
+			else
+				throw new ClientException(response);
+		}
+		catch (Exception ex) {
+			throw new ClientException(ex.getMessage(), ex);
+		}
+	}
 }

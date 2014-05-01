@@ -17,7 +17,7 @@ public class WriteHandler extends Handler {
 		int sizeInBytes = Integer.parseInt(StreamUtil.readLine(inputStream));
 		logger.debug("size in bytes: " + sizeInBytes);
 		byte[] data = StreamUtil.readData(sizeInBytes, inputStream);
-		logger.debug("data: " + data);
+		logger.debug("data: " + new String(data));
 		String responseCode = "";
 		try {
 			FileUtil.writeData(name, data);

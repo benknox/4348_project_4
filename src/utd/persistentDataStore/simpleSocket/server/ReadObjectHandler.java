@@ -16,7 +16,6 @@ public class ReadObjectHandler extends Handler {
 		String responseCode = "";
 		Object data = null;
 		String name = StreamUtil.readLine(inputStream);
-		ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 		try {
 			data = FileUtil.readObject(name);
 		} catch (ServerException e) {
@@ -24,6 +23,7 @@ public class ReadObjectHandler extends Handler {
 		}
 		if (responseCode.isEmpty()) {
 			StreamUtil.writeLine("ok", outputStream);
+			ObjectOutputStream oos = new ObjectOutputStream(outputStream);
 			oos.writeObject(data);
 			oos.flush();
 			logger.debug("Finished writing message");

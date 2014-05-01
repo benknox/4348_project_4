@@ -71,7 +71,7 @@ public class Server
 			Handler handler = new ReadHandler();
 			return handler;
 		}
-		else if ("read object".equalsIgnoreCase(commandString)) {
+		else if ("readObject".equalsIgnoreCase(commandString)) {
 			Handler handler = new ReadObjectHandler();
 			return handler;
 		}
@@ -79,7 +79,7 @@ public class Server
 			Handler handler = new WriteHandler();
 			return handler;
 		}
-		else if ("write object".equalsIgnoreCase(commandString)) {
+		else if ("writeObject".equalsIgnoreCase(commandString)) {
 			Handler handler = new WriteObjectHandler();
 			return handler;
 		}

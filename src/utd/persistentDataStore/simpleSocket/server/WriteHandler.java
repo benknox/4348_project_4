@@ -14,7 +14,7 @@ public class WriteHandler extends Handler {
 	protected void run() throws IOException {
 		String name = StreamUtil.readLine(inputStream);
 		logger.debug("name: " + name);
-		int sizeInBytes = Integer.getInteger(StreamUtil.readLine(inputStream));
+		int sizeInBytes = Integer.parseInt(StreamUtil.readLine(inputStream));
 		logger.debug("size in bytes: " + sizeInBytes);
 		byte[] data = StreamUtil.readData(sizeInBytes, inputStream);
 		logger.debug("data: " + data);
